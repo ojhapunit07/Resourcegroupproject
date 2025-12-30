@@ -50,24 +50,20 @@ stages:
                         tar -xvf infracost.tar.gz
                         .\infracost.exe --version
                         .\infracost.exe auth login
-        - task: PowerShell@2
-          displayName: Infracost Cost Breakdown
   
+        - task: PowerShell@2
+          displayName: Terraform Init & Plan
           inputs:
             targetType: inline
             script: |
-      # Set Infracost API key (non-interactive)
-    $env:INFRACOST_API_KEY = "$(INFRACOST_API_KEY)"
+              # Move to Terraform directory
+              cd "$(System.DefaultWorkingDirectory)/Environment/prod"
 
-    # Move to Terraform directory
-      cd "$(System.DefaultWorkingDirectory)/Environment/prod"
-
-# Terraform init & plan
-    terraform init -input=false
-      terraform plan -out=tfplan
-
-      # Cost estimation
-      infracost breakdown --path=tfplan --format table  
+              # Terraform init & plan
+              terraform init -input=false
+              terraform plan -out=tfplan
+     
+ 
 
   - stage: CodeScan
     displayName: terraform code Scan
