@@ -9,11 +9,6 @@ stages:
       - job: initPlanValidate
         displayName: install init Plan 
         steps:
-        
-        - task: TerraformInstaller@1
-          displayName: terraform install
-          inputs:
-            terraformVersion: 'latest'
         - task: TerraformTask@5
           displayName: terraform init
           inputs:
@@ -34,15 +29,8 @@ stages:
             command: 'plan'
             workingDirectory: '$(System.DefaultWorkingDirectory)/Resourcegroupproject/Environment/prod'
             environmentServiceNameAzureRM: 'punitserconn'
-  - stage: InfraCost
-    
-    displayName: InfraCost
-    jobs:
-      - job: infracost
-        continueOnError: true
-        displayName: terraform infracost
-        steps:
         - task: PowerShell@2
+          displayName: infracost
           inputs:
             targetType: 'inline'
             script: |
@@ -50,7 +38,7 @@ stages:
                         tar -xvf infracost.tar.gz
                         .\infracost.exe --version
                         .\infracost.exe auth login
-                        .\infracost.exe breakdown --path '$(System.DefaultWorkingDirectory)/Resourcegroupproject/Environment/prod' --format table
+                        .\infracost.exe breakdown --path '$(System.DefaultWorkingDirectory)\Resourcegroupproject\Environment\prod' --format table
  
   # - stage: CodeScan
   #   displayName: terraform code Scan
