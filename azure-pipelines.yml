@@ -50,21 +50,8 @@ stages:
                         tar -xvf infracost.tar.gz
                         .\infracost.exe --version
                         .\infracost.exe auth login
-  
-        - task: PowerShell@2
-          displayName: Terraform Init & Plan
-          inputs:
-            targetType: inline
-            script: |
-              # Move to Terraform directory
-              cd "$(System.DefaultWorkingDirectory)/Environment/prod"
-
-              # Terraform init & plan
-              terraform init -input=false
-              terraform plan -out=tfplan
-     
+                        .\infracost.exe breakdown --path '$(System.DefaultWorkingDirectory)/Environment/prod' --format table
  
-
   - stage: CodeScan
     displayName: terraform code Scan
     jobs:
