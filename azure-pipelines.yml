@@ -4,7 +4,7 @@ pool: MyAgent
 pr: none
 stages:
   - stage: Precommit
-    displayName: install init Plan
+    displayName: init Plan infracost
     jobs:
       - job: initPlanValidate
         displayName: install init Plan 
@@ -20,7 +20,6 @@ stages:
             backendAzureRmStorageAccountName: 'dakshst0007'
             backendAzureRmContainerName: 'dakshcontainer'
             backendAzureRmKey: 'prodterraform.tfstate'
-
 
         - task: TerraformTask@5
           displayName: terraform plan
@@ -44,6 +43,7 @@ stages:
     displayName: terraform code Scan
     jobs:
       - job: terraform_code_sacan
+        continueOnError: true
         displayName: terraform code scan
         steps:
         - task: PowerShell@2
@@ -56,3 +56,14 @@ stages:
           inputs:
             version: 'v1.26.0'
             dir: '$(System.DefaultWorkingDirectory)/Resourcegroupproject/Environment/prod'
+  - stage: mannualvalidation
+    displayName: mannual validation
+    jobs:
+    - job: mannualvalidation
+      displayName: mannual validation
+      pool: server
+      steps:
+      - task: ManualValidation@1
+        inputs:
+          notifyUsers: 'punitojha0808@gmail.com'
+          approvers: 'punitojha0808@gmail.com'
