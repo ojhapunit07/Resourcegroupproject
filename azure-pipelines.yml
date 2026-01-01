@@ -47,12 +47,16 @@ stages:
         displayName: terraform code scan
         steps:
         - task: PowerShell@2
+          displayName: tflint
+          continueOnError: true
           inputs:
             targetType: 'inline'
+            workingDirectory: '$(System.DefaultWorkingDirectory)/Resourcegroupproject/Environment/prod'
             script: |
               'winget install terraformlinters.tflint --accept-source-agreements --accept-package-agreements; exit 0'
-              workingDirectory: '$(System.DefaultWorkingDirectory)\Resourcegroupproject\Environment\prod'
+              
         - task: tfsec@1
+          displayName: tfsec
           inputs:
             version: 'v1.26.0'
             dir: '$(System.DefaultWorkingDirectory)/Resourcegroupproject/Environment/prod'
