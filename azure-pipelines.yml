@@ -31,7 +31,7 @@ stages:
   - stage: plan
     displayName: init Plan infracost
     jobs:
-      - job: initPlanValidate
+      - job: initPlan
         pool: MyAgent
         displayName: install init Plan 
         steps:
