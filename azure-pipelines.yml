@@ -77,3 +77,17 @@ stages:
         inputs:
           notifyUsers: 'punitojha0808@gmail.com'
           approvers: 'punitojha0808@gmail.com'
+  - stage: terraformApply
+    displayName: terraform apply
+    jobs:
+    - job: terraformapplyjob
+      displayName: terraform apply
+      pool: MyAgent
+      steps:
+      - task: TerraformTask@5
+        displayName: terraform apply
+        inputs:
+          provider: 'azurerm'
+          command: 'apply'
+          workingDirectory: '$(System.DefaultWorkingDirectory)/Resourcegroupproject/Environment/prod'
+          environmentServiceNameAzureRM: 'punitserconn'
