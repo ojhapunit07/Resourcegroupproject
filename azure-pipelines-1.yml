@@ -1,0 +1,27 @@
+name: destroy pipeline
+trigger: none
+pool: MyAgent
+stages:
+- stage: destroy
+  displayName: destroy stage
+  jobs:
+  - job: destroy
+    displayName: destroy job
+    steps:
+    - task: TerraformTask@5
+      displayName: terraform init
+      inputs:
+        provider: 'azurerm'
+        command: 'init'
+        workingDirectory: '$(System.DefaultWorkingDirectory)/Resourcegroupproject/Environment/prod'
+        commandOptions: '-reconfigure'
+        backendServiceArm: 'punitserconn'
+        backendAzureRmStorageAccountName: 'dakshst0007'
+        backendAzureRmContainerName: 'dakshcontainer'
+        backendAzureRmKey: 'prodterraform.tfstate'
+    - task: TerraformTask@5
+      inputs:
+        provider: 'azurerm'
+        command: 'destroy'
+        workingDirectory: '$(System.DefaultWorkingDirectory)/Resourcegroupproject/Environment/prod'
+        environmentServiceNameAzureRM: 'punitserconn'
