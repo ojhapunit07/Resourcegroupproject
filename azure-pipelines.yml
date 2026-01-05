@@ -26,6 +26,7 @@ stages:
     jobs:
     - job: ApplicationBuild
       displayName: Application Build
+      pool: MyAgent
       steps:            
         - task: NodeTool@0
           displayName: Setup Node.js Environment
