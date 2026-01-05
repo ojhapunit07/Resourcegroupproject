@@ -51,8 +51,17 @@ stages:
             targetPath: '$(System.DefaultWorkingDirectory)/Resourcegroupproject/Environment/ReactTodoUIMonolith'
             artifact: 'todo-ui'
             publishLocation: 'pipeline'
-
-
+  - stage: deployToDev
+    # condition: eq(variables['Build.SourceBranch'], 'refs/heads/develop')
+    displayName: Deploy To Dev VM
+    jobs:
+    - job: deploy      
+      steps:
+      - task: DownloadPipelineArtifact@2
+        inputs:
+          buildType: 'current'
+          artifactName: 'todo-ui'
+          targetPath: '$(Pipeline.Workspace)/build_artifacts'
 
   #       - task: tfsec@1
   #         displayName: tfsec
