@@ -21,6 +21,36 @@ stages:
               tflint --version
               tflint --init
                tflint
+  - stage: BuildAndPackage
+    displayName: Build & Artifact Packaging
+    jobs:
+    - job: ApplicationBuild
+      displayName: Application Build
+      steps:            
+        - task: NodeTool@0
+          displayName: Setup Node.js Environment
+          inputs:
+            versionSource: 'spec'
+            versionSpec: '16.x'
+        - task: PowerShell@2
+          displayName: Install Dependencies
+          inputs:
+            targetType: 'inline'
+            script: 'npm install'    
+        - task: PowerShell@2
+          displayName: Build Application
+          inputs:
+            targetType: 'inline'
+            script: 'npm run build'    
+        - task: PublishPipelineArtifact@1
+          displayName: Publish Build Artifact
+          inputs:
+            targetPath: '$(Pipeline.Workspace)/build'
+            artifact: 'todo-ui'
+            publishLocation: 'pipeline'
+
+
+
   #       - task: tfsec@1
   #         displayName: tfsec
   #         inputs:
