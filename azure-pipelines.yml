@@ -37,16 +37,18 @@ stages:
           displayName: Install Dependencies
           inputs:
             targetType: 'inline'
+            workingDirectory: '$(System.DefaultWorkingDirectory)/Resourcegroupproject/Environment/ReactTodoUIMonolith'
             script: 'npm install'    
         - task: PowerShell@2
           displayName: Build Application
           inputs:
             targetType: 'inline'
+            workingDirectory: '$(System.DefaultWorkingDirectory)/Resourcegroupproject/Environment/ReactTodoUIMonolith'
             script: 'npm run build'    
         - task: PublishPipelineArtifact@1
           displayName: Publish Build Artifact
           inputs:
-            targetPath: '$(Pipeline.Workspace)/build'
+            targetPath: '$(System.DefaultWorkingDirectory)/Resourcegroupproject/Environment/ReactTodoUIMonolith'
             artifact: 'todo-ui'
             publishLocation: 'pipeline'
 
