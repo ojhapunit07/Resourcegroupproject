@@ -21,63 +21,63 @@ stages:
         #       tflint --version
         #       tflint --init
         #        tflint
-  - stage: BuildAndPackage
-    displayName: Build & Artifact Packaging
-    jobs:
-    - job: ApplicationBuild
-      displayName: Application Build
-      pool: MyAgent
-      steps:            
-        - task: NodeTool@0
-          displayName: Setup Node.js Environment
-          inputs:
-            versionSource: 'spec'
-            versionSpec: '16.x'
-        - task: PowerShell@2
-          displayName: Install Dependencies
-          inputs:
-            targetType: 'inline'
-            workingDirectory: '$(System.DefaultWorkingDirectory)/Resourcegroupproject/Environment/ReactTodoUIMonolith'
-            script: 'npm install'    
-        - task: PowerShell@2
-          displayName: Build Application
-          inputs:
-            targetType: 'inline'
-            workingDirectory: '$(System.DefaultWorkingDirectory)/Resourcegroupproject/Environment/ReactTodoUIMonolith'
-            script: 'npm run build'    
-        - task: PublishPipelineArtifact@1
-          displayName: Publish Build Artifact
-          inputs:
-            targetPath: '$(System.DefaultWorkingDirectory)/Resourcegroupproject/Environment/ReactTodoUIMonolith/build'
-            artifact: 'todo-ui'
-            publishLocation: 'pipeline'
-  - stage: deployToDev
-    # condition: eq(variables['Build.SourceBranch'], 'refs/heads/develop')
-    displayName: Deploy To Dev VM
-    jobs:
-    - job: deploy
-      pool: MyAgent      
-      steps:
-      - task: DownloadPipelineArtifact@2
-        inputs:
-          buildType: 'current'
-          artifactName: 'todo-ui'
-          targetPath: '$(Pipeline.Workspace)/todo-ui'
-      - task: CopyFilesOverSSH@0
-        inputs:
-          sshEndpoint: 'sshcon'
-          sourceFolder: '$(Pipeline.Workspace)/todo-ui'
-          contents: '**'
-          targetFolder: '/home/adminuser/todo-ui'
-          readyTimeout: '20000'
-      - task: SSH@0
-        inputs:
-          sshEndpoint: 'sshcon'
-          runOptions: 'commands'
-          commands: |
-            sudo rm -rf /var/www/html/*
-            sudo cp -r /home/adminuser/todo-ui/* /var/www/html
-          readyTimeout: '20000'
+  # - stage: BuildAndPackage
+  #   displayName: Build & Artifact Packaging
+  #   jobs:
+  #   - job: ApplicationBuild
+  #     displayName: Application Build
+  #     pool: MyAgent
+  #     steps:            
+  #       - task: NodeTool@0
+  #         displayName: Setup Node.js Environment
+  #         inputs:
+  #           versionSource: 'spec'
+  #           versionSpec: '16.x'
+  #       - task: PowerShell@2
+  #         displayName: Install Dependencies
+  #         inputs:
+  #           targetType: 'inline'
+  #           workingDirectory: '$(System.DefaultWorkingDirectory)/Resourcegroupproject/Environment/ReactTodoUIMonolith'
+  #           script: 'npm install'    
+  #       - task: PowerShell@2
+  #         displayName: Build Application
+  #         inputs:
+  #           targetType: 'inline'
+  #           workingDirectory: '$(System.DefaultWorkingDirectory)/Resourcegroupproject/Environment/ReactTodoUIMonolith'
+  #           script: 'npm run build'    
+  #       - task: PublishPipelineArtifact@1
+  #         displayName: Publish Build Artifact
+  #         inputs:
+  #           targetPath: '$(System.DefaultWorkingDirectory)/Resourcegroupproject/Environment/ReactTodoUIMonolith/build'
+  #           artifact: 'todo-ui'
+  #           publishLocation: 'pipeline'
+  # - stage: deployToDev
+  #   # condition: eq(variables['Build.SourceBranch'], 'refs/heads/develop')
+  #   displayName: Deploy To Dev VM
+  #   jobs:
+  #   - job: deploy
+  #     pool: MyAgent      
+  #     steps:
+  #     - task: DownloadPipelineArtifact@2
+  #       inputs:
+  #         buildType: 'current'
+  #         artifactName: 'todo-ui'
+  #         targetPath: '$(Pipeline.Workspace)/todo-ui'
+  #     - task: CopyFilesOverSSH@0
+  #       inputs:
+  #         sshEndpoint: 'sshcon'
+  #         sourceFolder: '$(Pipeline.Workspace)/todo-ui'
+  #         contents: '**'
+  #         targetFolder: '/home/adminuser/todo-ui'
+  #         readyTimeout: '20000'
+  #     - task: SSH@0
+  #       inputs:
+  #         sshEndpoint: 'sshcon'
+  #         runOptions: 'commands'
+  #         commands: |
+  #           sudo rm -rf /var/www/html/*
+  #           sudo cp -r /home/adminuser/todo-ui/* /var/www/html
+  #         readyTimeout: '20000'
   #       - task: tfsec@1
   #         displayName: tfsec
   #         inputs:
@@ -134,28 +134,28 @@ stages:
   #       inputs:
   #         notifyUsers: 'punitojha0808@gmail.com'
   #         approvers: 'punitojha0808@gmail.com'
-  # - stage: terraformApply
-  #   displayName: terraform apply
-  #   jobs:
-  #   - job: terraformapplyjob
-  #     displayName: terraform apply
-  #     pool: MyAgent
-  #     steps:
-  #     - task: TerraformTask@5
-  #       displayName: terraform init
-  #       inputs:
-  #         provider: 'azurerm'
-  #         command: 'init'
-  #         workingDirectory: '$(System.DefaultWorkingDirectory)/Resourcegroupproject/Environment/prod'
-  #         commandOptions: '-reconfigure'
-  #         backendServiceArm: 'punitserconn'
-  #         backendAzureRmStorageAccountName: 'dakshst0007'
-  #         backendAzureRmContainerName: 'dakshcontainer'
-  #         backendAzureRmKey: 'prodterraform.tfstate'
-  #     - task: TerraformTask@5
-  #       displayName: terraform apply
-  #       inputs:
-  #         provider: 'azurerm'
-  #         command: 'apply'
-  #         workingDirectory: '$(System.DefaultWorkingDirectory)/Resourcegroupproject/Environment/prod'
-  #         environmentServiceNameAzureRM: 'punitserconn'
+  - stage: terraformApply
+    displayName: terraform apply
+    jobs:
+    - job: terraformapplyjob
+      displayName: terraform apply
+      pool: MyAgent
+      steps:
+      - task: TerraformTask@5
+        displayName: terraform init
+        inputs:
+          provider: 'azurerm'
+          command: 'init'
+          workingDirectory: '$(System.DefaultWorkingDirectory)/Resourcegroupproject/Environment/prod'
+          commandOptions: '-reconfigure'
+          backendServiceArm: 'punitserconn'
+          backendAzureRmStorageAccountName: 'dakshst0007'
+          backendAzureRmContainerName: 'dakshcontainer'
+          backendAzureRmKey: 'prodterraform.tfstate'
+      - task: TerraformTask@5
+        displayName: terraform apply
+        inputs:
+          provider: 'azurerm'
+          command: 'apply'
+          workingDirectory: '$(System.DefaultWorkingDirectory)/Resourcegroupproject/Environment/prod'
+          environmentServiceNameAzureRM: 'punitserconn'
