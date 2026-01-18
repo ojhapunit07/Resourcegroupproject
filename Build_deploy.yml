@@ -34,7 +34,7 @@ stages:
     - task: PublishPipelineArtifact@1
       displayName: Publish Build Artifact
       inputs:
-        targetPath: '$(System.DefaultWorkingDirectory)/Resourcegroupproject/Environment/ReactTodoUIMonolith'
+        targetPath: '$(System.DefaultWorkingDirectory)/Resourcegroupproject/Environment/ReactTodoUIMonolith/build'
         artifact: 'todo-ui'
         publishLocation: 'pipeline'
 
