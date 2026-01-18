@@ -9,7 +9,7 @@ stages:
   - job: build
     displayName: Build job
     
-    steps:
+    # steps:
     # - task: NodeTool@0
     #   displayName: Setup Node.js Environment
     #   inputs:
@@ -37,6 +37,12 @@ stages:
     #     targetPath: '$(System.DefaultWorkingDirectory)/Resourcegroupproject/Environment/ReactTodoUIMonolith/build'
     #     artifact: 'todo-ui'
     #     publishLocation: 'pipeline'
+- stage: deploystage
+  displayName: deploy job 
+  jobs:
+  - job: deploy
+    displayName: deploy job
+    steps:
     - task: DownloadBuildArtifacts@1
       inputs:
         buildType: 'specific'
