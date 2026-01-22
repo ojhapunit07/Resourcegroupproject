@@ -42,10 +42,14 @@ stages:
               sshEndpoint: 'vmservice-conn'
               runOptions: 'inline'
               inline: |
-                sudo apt-get update -y
-                sudo apt install apache2 -y
+                #!/bin/bash
+                      set -e
+                      export DEBIAN_FRONTEND=noninteractive
                 
-                exit 0
+                      sudo apt-get update -y
+                      sudo apt-get install -y nginx
+                      sudo systemctl restart nginx
+                      exit 0
               readyTimeout: '20000'
           - task: SSH@0
             displayName: build copy to vm
