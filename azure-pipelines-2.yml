@@ -1,0 +1,59 @@
+trigger: none
+pr: none
+stages:
+- stage: deploytodo
+  displayName: deploy todo on vm
+  jobs:
+  - deployment: deploy_on_vm
+    displayName: deploy on vm
+    environment:
+        name: devops
+        # resourceName: 
+        # resourceId: string # Id of resource.
+        resourceType: virtualMachine
+        
+    strategy: 
+      runOnce:
+        deploy:
+          steps:
+          - task: DownloadBuildArtifacts@1
+            displayName: download artifact
+            inputs:
+              buildType: 'specific'
+              project: 'c1b81bd5-857d-4ba7-994f-2e367ce08b8a'
+              pipeline: '18'
+              buildVersionToDownload: 'specific'
+              buildId: '176'
+              downloadType: 'single'
+              artifactName: 'todo-ui'
+              downloadPath: '$(System.ArtifactsDirectory)'
+              cleanDestinationFolder: true
+          - task: CopyFilesOverSSH@0
+            displayName: copy artifact
+            inputs:
+              sshEndpoint: 'vmservice-conn'
+              sourceFolder: '$(System.ArtifactsDirectory)/todo-ui'
+              contents: '**'
+              targetFolder: '/home/punit/azagent'
+              readyTimeout: '20000'
+          - task: SSH@0
+            displayName: nginx install on vm
+            inputs:
+              sshEndpoint: 'vmservice-conn'
+              runOptions: 'inline'
+              inline: |
+                sudo apt-get update -y
+                sudo apt-get install -y nginx
+                sudo systemctl restart nginx
+                exit 0
+              readyTimeout: '20000'
+          - task: SSH@0
+            displayName: build copy to vm
+            inputs:
+              sshEndpoint: 'vmservice-conn'
+              runOptions: 'inline'
+              inline: |
+                sudo rm -rf /var/www/html*
+                sudo cp -r /home/punit/azagent/* /var/www/html
+              readyTimeout: '20000'
+              
