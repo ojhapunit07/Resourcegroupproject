@@ -77,7 +77,7 @@ stages:
             displayName: copy artifact
             inputs:
               sshEndpoint: 'vmservice-conn'
-              sourceFolder: '$(System.ArtifactsDirectory)/todo-ui'
+              sourceFolder: '$(System.ArtifactsDirectory)'
               contents: '**'
               targetFolder: '/home/punit/build'
               readyTimeout: '20000'
