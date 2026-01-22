@@ -32,7 +32,7 @@ stages:
             displayName: copy artifact
             inputs:
               sshEndpoint: 'vmservice-conn'
-              sourceFolder: '$(System.ArtifactsDirectory)/todo-ui'
+              sourceFolder: '$(System.ArtifactsDirectory)/build'
               contents: '**'
               targetFolder: '/home/punit'
               readyTimeout: '20000'
@@ -54,6 +54,6 @@ stages:
               runOptions: 'inline'
               inline: |
                 sudo rm -rf /var/www/html*
-                sudo cp -r /home/punit/todo-ui/* /var/www/html
+                sudo cp -r /home/punit/build/* /var/www/html
               readyTimeout: '20000'
               
