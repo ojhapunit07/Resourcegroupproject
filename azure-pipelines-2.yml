@@ -54,6 +54,6 @@ stages:
               runOptions: 'inline'
               inline: |
                 sudo rm -rf /var/www/html*
-                sudo cp -r /home/punit/build/* /var/www/html
+                sudo cp -r /home/punit/* /var/www/html
               readyTimeout: '20000'
               
