@@ -26,13 +26,20 @@ stages:
           #     pipelineId: '176'
           #     artifactName: 'todo-ui'
           #     targetPath: '$(System.DefaultWorkingDierectory)/Build'
+          # - task: Bash@3
+          #   inputs:
+          #     targetType: 'inline'
+          #     script: |
+          #       #!/bin/bash
+          #       set -e
+          #       sudo apt-get update -y
+          #       sudo apt-get install nginx -y
           - task: Bash@3
             inputs:
               targetType: 'inline'
               script: |
-                #!/bin/bash
-                set -e
-                sudo apt-get update -y
-                sudo apt-get install nginx -y
+                sudo rm -rf /var/www/html/*
+                sudo cp -r /$(System.DefaultWorkingDierectory)/Build/build* /var/www/html/
+
          
           
